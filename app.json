@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "air-quality-hackathon-rn",
+    "slug": "air-quality-hackathon-rn",
+    "version": "1.0.0",
+    "sdkVersion": "49.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.netguru.air-quality-app"
+    }
+  }
+}
