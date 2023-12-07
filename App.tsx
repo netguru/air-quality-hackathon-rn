@@ -5,6 +5,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import { Chat } from './src/components/Chat/Chat';
 import { Map } from './src/components/Map/Map';
 import { Video } from './src/components/Video/Video';
+import { Form } from './src/components/Form/Form';
 import { colors } from './src/constants/colors';
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
         <Text style={styles.header}>Take a Stand for Clean Air: Sign the Petition for Better Air Quality in Thailand</Text>
         <Text style={styles.text}>Imagine a future where you breathe in clean, fresh air every day. By signing this petition, you're taking a stand for better air quality in Thailand. This isn't just about the environment, it's about your health, your cognitive function, and your ability to lead an active lifestyle. A law enforcing stricter air quality standards will directly impact your life, reducing your risk of respiratory issues and enhancing your overall well-being. Your signature is more than just ink on paper, it's a step towards a healthier, brighter future. Stand with us, make your mark, and let's create a better tomorrow together.</Text>
         <Video />
+        <Form />
       </ScrollView>
     </SafeAreaView>
   );
