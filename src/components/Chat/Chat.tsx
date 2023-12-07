@@ -51,7 +51,7 @@ export const Chat = () => {
     setMessages([
       {
         user: 'bot',
-        message: 'Hello! I’m your Clean Air AI Advocate. Ask me whatever you would like to know about',
+        message: 'Hello! I’m your Clean Air AI Advocate. Ask me whatever you like to know about',
       },
     ]);
   }, []);

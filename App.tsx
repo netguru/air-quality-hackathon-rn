@@ -8,6 +8,7 @@ import { Video } from './src/components/Video/Video';
 import { Form } from './src/components/Form/Form';
 import { colors } from './src/constants/colors';
 import { Header } from './src/components/Header/Header';
+import { Footer } from './src/components/Footer/Footer';
 
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
@@ -46,6 +47,7 @@ export default function App() {
         </Text>
         <Video />
         <Form />
+        <Footer />
       </ScrollView>
     </SafeAreaView>
   );
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     textAlign: 'center',
-    fontFamily: 'Lato',
+    fontFamily: 'Raleway',
     color: colors.text,
     fontSize: 32,
   },
