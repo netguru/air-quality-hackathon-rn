@@ -4,10 +4,22 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 
 export const Form = () => {
   const { control, handleSubmit } = useForm();
+  const { formSubmitted, setFormSubmitted } = React.useState(false);
 
-  const onSubmit = (data) => {
-    // Simulate form submission
-    console.log('Submitted Data:', data);
+  const onSubmit = async (formData) => {
+    const uri = 'https://thailandcan.org/api/petition';
+    const body = JSON.stringify({ email: formData.email, first_name: formData.firstname, last_name: formData.lastname, province: 'Bangkok' });
+
+    const response = await fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    const { data } = await response.json();
+    setFormSubmitted(true)
   };
 
   return (
@@ -38,9 +50,10 @@ export const Form = () => {
           }}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+        <TouchableOpacity disabled={formSubmitted} style={styles.button} onPress={handleSubmit(onSubmit)}>
           <Text style={styles.buttonText}>Sign petition</Text>
         </TouchableOpacity>
+        {formSubmitted && <Text style={styles.text}>Petition send</Text>}
       </View>
     </View>
   );
@@ -75,6 +88,9 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: '#fff',
+  },
+  text: {
+    color: '#333'
   },
   header: {
     textAlign: 'center',
