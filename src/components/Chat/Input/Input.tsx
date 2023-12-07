@@ -1,41 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { colors } from '../../../constants/colors';
 
-export const Input = () => {
+export const Input = ({ onSendMessage }) => {
+  const [input, setInput] = useState(null);
+
   const hints = ['What is air pollution?', 'How to sign in the petition?', 'What is CO2?'];
 
-  const onSendMessage = async () => {
-    const uri = 'http://195.201.198.36:8503/query';
-    const body = JSON.stringify({ question: 'Hello! What is Thailand CAN?' });
+  const handleSendMessage = (message: string) => {
+    if (!message) {
+      return;
+    }
 
-    const response = await fetch(uri, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    });
-
-    const data = await response.json();
-
-    console.log('response', data);
+    onSendMessage(message);
+    setInput(null);
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.hintsWrapper} horizontal>
+      <ScrollView style={styles.hintsWrapper} horizontal showsHorizontalScrollIndicator={false}>
         {hints.map((item, index) => (
-          <Pressable style={styles.hintButton} key={index}>
+          <Pressable style={styles.hintButton} key={index} onPress={() => handleSendMessage(item)}>
             <Text style={styles.hintText}>{item}</Text>
           </Pressable>
         ))}
       </ScrollView>
       <View style={styles.inputArea}>
-        <TextInput style={styles.input} />
+        <TextInput style={styles.input} value={input} placeholder="Message" onChangeText={setInput} />
         <View style={styles.buttonWrapper}>
-          <Pressable style={styles.button} hitSlop={20} onPress={onSendMessage}>
+          <Pressable style={styles.button} hitSlop={20} onPress={() => input && handleSendMessage(input)}>
             <Image style={styles.buttonImage} source={require('../../../assets/icons/arrow-up.png')} />
           </Pressable>
         </View>
@@ -46,9 +40,22 @@ export const Input = () => {
 
 const styles = StyleSheet.create({
   container: {},
-  hintsWrapper: {},
-  hintButton: {},
-  hintText: {},
+  hintsWrapper: {
+    flexDirection: 'row',
+    padding: 16,
+  },
+  hintButton: {
+    backgroundColor: colors.secondary,
+    borderRadius: 16,
+    padding: 16,
+    marginRight: 16,
+  },
+  hintText: {
+    fontFamily: 'Lato',
+    fontSize: 16,
+    lineHeight: 24,
+    color: colors.text,
+  },
   inputArea: {
     height: 75,
     padding: 16,

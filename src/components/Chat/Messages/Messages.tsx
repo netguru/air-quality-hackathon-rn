@@ -2,39 +2,42 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../../../constants/colors';
 
-export const Messages = () => {
-  const messages = [
-    {
-      user: 'CAN bot',
-      message: 'Hello, John! I’m your Clean Air AI Advocate. Ask me whatever you would like to know about',
-    },
-    {
-      user: 'You',
-      message: 'Hi!',
-    },
-  ];
+export type MessageType = {
+  user: 'user' | 'bot';
+  message: string;
+};
 
-  const getMessageImage = (userName: string) => {
-    if (userName === 'You') {
+export const Messages = ({ messages }: { messages: MessageType[] | null }) => {
+  const getUserImage = (userName: string) => {
+    if (userName === 'user') {
       return require('../../../assets/icons/user.png');
     }
 
     return require('../../../assets/icons/bot.png');
   };
 
+  const getUserName = (userName: string) => {
+    if (userName === 'user') {
+      return 'You';
+    }
+
+    return 'CAN bot';
+  };
+
   return (
     <ScrollView style={styles.container}>
-      {messages.map((item, index) => (
-        <View style={styles.messageWrapper} key={index}>
-          <View style={styles.messageImageWrapper}>
-            <Image style={styles.messageImage} source={getMessageImage(item.user)} />
+      {messages &&
+        messages.map((item, index) => (
+          <View style={styles.messageWrapper} key={index}>
+            <View style={styles.messageImageWrapper}>
+              <Image style={styles.messageImage} source={getUserImage(item.user)} />
+            </View>
+            <View style={styles.messageContentWrapper}>
+              <Text style={styles.messageUser}>{getUserName(item.user)}</Text>
+              <Text style={styles.messageText}>{item.message}</Text>
+            </View>
           </View>
-          <View style={styles.messageContentWrapper}>
-            <Text style={styles.messageUser}>{item.user}</Text>
-            <Text style={styles.messageText}>{item.message}</Text>
-          </View>
-        </View>
-      ))}
+        ))}
     </ScrollView>
   );
 };
