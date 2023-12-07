@@ -1,5 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Image, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  XIcon,
+  LinkedinShareButton,
+  LinkedinIcon,
+} from 'react-share';
 
 import { colors } from '../../../constants/colors';
 
@@ -24,16 +33,31 @@ const LoadingAnimation = ({ dotsCount }) => {
 
 const TypingText = ({
   initialText,
+  isFirstMessage,
   isNewMessage,
   scrollHandler,
 }: {
   initialText: string;
+  isFirstMessage: boolean;
   isNewMessage: boolean;
   scrollHandler: () => void;
 }) => {
   const [isTypingFinished, setIsTypingFinished] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentLetter, setCurrentLetter] = useState('');
+
+  const onSharePress = () => {
+    if (Platform.OS !== 'web') {
+      Share.share({ message: initialText });
+      return;
+    }
+
+    const copyToClipboard = async () => {
+      await Clipboard.setStringAsync(initialText);
+    };
+
+    copyToClipboard();
+  };
 
   const typeWriter = () => {
     if (currentIndex < initialText.length) {
@@ -64,7 +88,31 @@ const TypingText = ({
     return <Text style={styles.messageText}>{currentLetter}</Text>;
   }
 
-  return <Text style={styles.messageText}>{initialText}</Text>;
+  return (
+    <>
+      <Text style={styles.messageText}>{initialText}</Text>
+      {!isFirstMessage &&
+        (Platform.OS !== 'web' ? (
+          <View style={styles.shareButtonsWrapper}>
+            <Pressable hitSlop={10} onPress={onSharePress}>
+              <Text style={styles.shareText}>Share</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <View style={styles.shareButtonsWrapper}>
+            <FacebookShareButton style={styles.shareImage} url="https://thailandcan.org/" beforeOnClick={onSharePress}>
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+            <TwitterShareButton style={styles.shareImage} url="https://thailandcan.org/" beforeOnClick={onSharePress}>
+              <XIcon size={32} round />
+            </TwitterShareButton>
+            <LinkedinShareButton style={styles.shareImage} url="https://thailandcan.org/" beforeOnClick={onSharePress}>
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>
+          </View>
+        ))}
+    </>
+  );
 };
 
 export const Messages = ({
@@ -104,7 +152,12 @@ export const Messages = ({
     }
 
     return (
-      <TypingText initialText={message} isNewMessage={index === loadingMessageIndex} scrollHandler={scrollToEnd} />
+      <TypingText
+        initialText={message}
+        isFirstMessage={index === 0}
+        isNewMessage={index === loadingMessageIndex}
+        scrollHandler={scrollToEnd}
+      />
     );
   };
 
@@ -169,5 +222,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     color: colors.text,
     fontSize: 16,
+  },
+  shareButtonsWrapper: {
+    width: '100%',
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  shareText: {
+    fontFamily: 'Lato',
+    color: colors.description,
+    fontSize: 12,
+  },
+  shareImage: {
+    width: 32,
+    height: 32,
+    marginLeft: 8,
   },
 });
