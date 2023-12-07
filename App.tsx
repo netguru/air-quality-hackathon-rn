@@ -5,6 +5,7 @@ import { Platform, SafeAreaView, ScrollView, StyleSheet, Text } from 'react-nati
 import { Chat } from './src/components/Chat/Chat';
 import { Map } from './src/components/Map/Map';
 import { Video } from './src/components/Video/Video';
+import { Form } from './src/components/Form/Form';
 import { colors } from './src/constants/colors';
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
           Stand with us, make your mark, and let's create a better tomorrow together.
         </Text>
         <Video />
+        <Form />
       </ScrollView>
     </SafeAreaView>
   );
