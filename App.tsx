@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 
 import { Chat } from './src/components/Chat/Chat';
+import { Map } from './src/components/Map/Map';
 import { colors } from './src/constants/colors';
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
       <ScrollView automaticallyAdjustKeyboardInsets>
         <Chat />
         <Text style={{ color: '#fff' }}>Hello</Text>
+        <Map />
       </ScrollView>
     </SafeAreaView>
   );
