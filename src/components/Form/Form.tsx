@@ -3,8 +3,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 export const Form = () => {
-  const { control, handleSubmit } = useForm();
-  const { formSubmitted, setFormSubmitted } = React.useState(false);
+  const { control, handleSubmit, formState: { errors } } = useForm();
+  const [ formSubmitted, setFormSubmitted ] = React.useState(false);
 
   const onSubmit = async (formData) => {
     const uri = 'https://thailandcan.org/api/petition';
@@ -22,6 +22,8 @@ export const Form = () => {
     setFormSubmitted(true)
   };
 
+  console.log(errors)
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -30,15 +32,17 @@ export const Form = () => {
           control={control}
           render={({ field }) => <TextInput {...field} style={styles.input} placeholder="Your first name" />}
           name="firstname"
-          rules={{ required: 'You must enter your name' }}
+          rules={{ required: 'You must enter your first name' }}
         />
+        {errors.firstname && <Text style={styles.errorText}>{errors.firstname.message}</Text>}
 
         <Controller
           control={control}
           render={({ field }) => <TextInput {...field} style={styles.input} placeholder="Your last name" />}
           name="lastname"
-          rules={{ required: 'You must enter your name' }}
+          rules={{ required: 'You must enter your last name' }}
         />
+        {errors.lastname && <Text style={styles.errorText}>{errors.lastname.message}</Text>}
 
         <Controller
           control={control}
@@ -49,6 +53,7 @@ export const Form = () => {
             pattern: { value: /^\S+@\S+$/i, message: 'Enter a valid email address' },
           }}
         />
+        {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
 
         <TouchableOpacity disabled={formSubmitted} style={styles.button} onPress={handleSubmit(onSubmit)}>
           <Text style={styles.buttonText}>Sign petition</Text>
@@ -99,4 +104,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 18,
   },
+  errorText: {
+    color: 'red'
+  }
 });
