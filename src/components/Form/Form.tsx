@@ -3,12 +3,26 @@ import { useForm, Controller } from 'react-hook-form';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 export const Form = () => {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, formState: { errors } } = useForm();
+  const [ formSubmitted, setFormSubmitted ] = React.useState(false);
 
-  const onSubmit = (data) => {
-    // Simulate form submission
-    console.log('Submitted Data:', data);
+  const onSubmit = async (formData) => {
+    const uri = 'https://thailandcan.org/api/petition';
+    const body = JSON.stringify({ email: formData.email, first_name: formData.firstname, last_name: formData.lastname, province: 'Bangkok' });
+
+    const response = await fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    const { data } = await response.json();
+    setFormSubmitted(true)
   };
+
+  console.log(errors)
 
   return (
     <View style={styles.container}>
@@ -18,15 +32,17 @@ export const Form = () => {
           control={control}
           render={({ field }) => <TextInput {...field} style={styles.input} placeholder="Your first name" />}
           name="firstname"
-          rules={{ required: 'You must enter your name' }}
+          rules={{ required: 'You must enter your first name' }}
         />
+        {errors.firstname && <Text style={styles.errorText}>{errors.firstname.message}</Text>}
 
         <Controller
           control={control}
           render={({ field }) => <TextInput {...field} style={styles.input} placeholder="Your last name" />}
           name="lastname"
-          rules={{ required: 'You must enter your name' }}
+          rules={{ required: 'You must enter your last name' }}
         />
+        {errors.lastname && <Text style={styles.errorText}>{errors.lastname.message}</Text>}
 
         <Controller
           control={control}
@@ -37,10 +53,12 @@ export const Form = () => {
             pattern: { value: /^\S+@\S+$/i, message: 'Enter a valid email address' },
           }}
         />
+        {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+        <TouchableOpacity disabled={formSubmitted} style={styles.button} onPress={handleSubmit(onSubmit)}>
           <Text style={styles.buttonText}>Sign petition</Text>
         </TouchableOpacity>
+        {formSubmitted && <Text style={styles.text}>Petition send</Text>}
       </View>
     </View>
   );
@@ -76,6 +94,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
   },
+  text: {
+    color: '#333'
+  },
   header: {
     textAlign: 'center',
     color: '#202d64',
@@ -83,4 +104,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 18,
   },
+  errorText: {
+    color: 'red'
+  }
 });
