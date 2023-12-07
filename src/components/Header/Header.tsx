@@ -1,23 +1,12 @@
-import { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../../constants/colors';
 
 export const Header = () => {
-  const [value, setValue] = useState(0);
+  const value = 59456;
 
   const goal = 100000;
-
-  const getSupportersValue = async () => {
-    const url = 'https://thailandcan.org/api/petition';
-
-    const response = await fetch(url, { method: 'GET' });
-    const data = await response.json();
-
-    setValue(data.times);
-  };
-
-  getSupportersValue();
 
   const getScaleWidth = () => {
     if (value >= goal) {
