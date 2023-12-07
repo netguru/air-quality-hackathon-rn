@@ -6,7 +6,15 @@ import { colors } from '../../../constants/colors';
 export const Input = ({ onSendMessage }) => {
   const [input, setInput] = useState(null);
 
-  const hints = ['What is air pollution?', 'How to sign in the petition?', 'What is CO2?'];
+  const hints = [
+    'What is air pollution?',
+    'Can you guide me on signing a clean air petition?',
+    'What small actions can I take to support cleaner air?',
+    'What are the key points of recent air quality laws?',
+    'How can individuals stay informed about air quality regulations?',
+    'How does local industry contribute to air pollution?',
+    "What's being done at the community level to improve air quality?",
+  ];
 
   const handleSendMessage = (message: string) => {
     if (!message) {

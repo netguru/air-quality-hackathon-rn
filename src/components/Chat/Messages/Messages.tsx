@@ -22,7 +22,15 @@ const LoadingAnimation = ({ dotsCount }) => {
   return <Text style={styles.messageText}>{dots}</Text>;
 };
 
-const TypingText = ({ initialText, isNewMessage }: { initialText: string; isNewMessage: boolean }) => {
+const TypingText = ({
+  initialText,
+  isNewMessage,
+  scrollHandler,
+}: {
+  initialText: string;
+  isNewMessage: boolean;
+  scrollHandler: () => void;
+}) => {
   const [isTypingFinished, setIsTypingFinished] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentLetter, setCurrentLetter] = useState('');
@@ -45,6 +53,13 @@ const TypingText = ({ initialText, isNewMessage }: { initialText: string; isNewM
     }
   }, [currentIndex, initialText, isNewMessage]);
 
+  useEffect(() => {
+    if (!isTypingFinished) {
+      const interval = setInterval(scrollHandler, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isTypingFinished]);
+
   if (!isTypingFinished) {
     return <Text style={styles.messageText}>{currentLetter}</Text>;
   }
@@ -62,6 +77,10 @@ export const Messages = ({
   loadingMessageIndex: number;
 }) => {
   const scrollViewRef = useRef<ScrollView | null>(null);
+
+  const scrollToEnd = () => {
+    scrollViewRef.current.scrollToEnd();
+  };
 
   const getUserImage = (userName: string) => {
     if (userName === 'user') {
@@ -84,11 +103,13 @@ export const Messages = ({
       return <Text style={styles.messageText}>{message}</Text>;
     }
 
-    return <TypingText initialText={message} isNewMessage={index === loadingMessageIndex} />;
+    return (
+      <TypingText initialText={message} isNewMessage={index === loadingMessageIndex} scrollHandler={scrollToEnd} />
+    );
   };
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd();
+    scrollToEnd();
   }, [messages]);
 
   const renderLoadingMessage = () => (
