@@ -67,7 +67,7 @@ export const Chat = () => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: windowHeight - 75,
+    height: windowHeight - 150,
   },
   text: {
     fontFamily: 'Lato',

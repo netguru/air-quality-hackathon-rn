@@ -7,6 +7,7 @@ import { Map } from './src/components/Map/Map';
 import { Video } from './src/components/Video/Video';
 import { Form } from './src/components/Form/Form';
 import { colors } from './src/constants/colors';
+import { Header } from './src/components/Header/Header';
 
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
@@ -20,6 +21,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.background}>
+      <Header />
       <ScrollView automaticallyAdjustKeyboardInsets contentContainerStyle={styles.container}>
         <Chat />
         <Text style={styles.header}>Breathing Easy - the dream.</Text>
