@@ -4,6 +4,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 
 import { Chat } from './src/components/Chat/Chat';
 import { Map } from './src/components/Map/Map';
+import { Video } from './src/components/Video/Video';
 import { colors } from './src/constants/colors';
 
 export default function App() {
@@ -22,6 +23,9 @@ export default function App() {
         <Chat />
         <Text style={{ color: '#fff' }}>Hello</Text>
         <Map />
+        <Text style={styles.header}>Thailand Air Quality</Text>
+        <Text style={styles.text}>Air Quality is important. Watch video.</Text>
+        <Video />
       </ScrollView>
     </SafeAreaView>
   );
@@ -35,5 +39,10 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Lato',
     color: colors.text,
+  },
+  header: {
+    fontFamily: 'Lato',
+    color: colors.text,
+    fontSize: 32,
   },
 });
