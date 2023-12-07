@@ -8,9 +8,12 @@ import { colors } from '../../constants/colors';
 const windowHeight = Dimensions.get('window').height;
 
 export const Chat = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState<MessageType[] | null>();
 
   const onSendMessage = async (message: string) => {
+    setIsLoading(true);
+
     setMessages((prev) => [
       ...prev,
       {
@@ -39,9 +42,12 @@ export const Chat = () => {
         message: data,
       },
     ]);
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
+    setIsLoading(false);
     setMessages([
       {
         user: 'bot',
@@ -52,7 +58,7 @@ export const Chat = () => {
 
   return (
     <View style={styles.container}>
-      <Messages messages={messages} />
+      <Messages messages={messages} isLoading={isLoading} loadingMessageIndex={messages && messages.length - 1} />
       <Input onSendMessage={onSendMessage} />
     </View>
   );

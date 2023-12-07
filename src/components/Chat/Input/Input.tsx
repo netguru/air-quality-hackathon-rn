@@ -27,7 +27,14 @@ export const Input = ({ onSendMessage }) => {
         ))}
       </ScrollView>
       <View style={styles.inputArea}>
-        <TextInput style={styles.input} value={input} placeholder="Message" onChangeText={setInput} />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor={colors.description}
+          value={input}
+          placeholder="Message"
+          onChangeText={setInput}
+          onSubmitEditing={() => input && handleSendMessage(input)}
+        />
         <View style={styles.buttonWrapper}>
           <Pressable style={styles.button} hitSlop={20} onPress={() => input && handleSendMessage(input)}>
             <Image style={styles.buttonImage} source={require('../../../assets/icons/arrow-up.png')} />
@@ -42,7 +49,8 @@ const styles = StyleSheet.create({
   container: {},
   hintsWrapper: {
     flexDirection: 'row',
-    padding: 16,
+    paddingTop: 16,
+    paddingHorizontal: 16,
   },
   hintButton: {
     backgroundColor: colors.secondary,

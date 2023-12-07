@@ -18,9 +18,8 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView automaticallyAdjustKeyboardInsets>
+      <ScrollView automaticallyAdjustKeyboardInsets showsVerticalScrollIndicator={false} bounces={false}>
         <Chat />
-        <Text style={{ color: '#fff' }}>Hello</Text>
         <Map />
       </ScrollView>
     </SafeAreaView>

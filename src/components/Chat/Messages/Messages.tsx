@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../../../constants/colors';
@@ -7,7 +8,61 @@ export type MessageType = {
   message: string;
 };
 
-export const Messages = ({ messages }: { messages: MessageType[] | null }) => {
+const LoadingAnimation = ({ dotsCount }) => {
+  const [dots, setDots] = useState('');
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prevDots) => (prevDots.length < dotsCount ? prevDots + '.' : '.'));
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [dotsCount]);
+
+  return <Text style={styles.messageText}>{dots}</Text>;
+};
+
+const TypingText = ({ initialText, isNewMessage }: { initialText: string; isNewMessage: boolean }) => {
+  const [isTypingFinished, setIsTypingFinished] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentLetter, setCurrentLetter] = useState('');
+
+  const typeWriter = () => {
+    if (currentIndex < initialText.length) {
+      setCurrentLetter((prevLetter) => prevLetter + initialText.charAt(currentIndex));
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+    } else {
+      setCurrentLetter('');
+      setCurrentIndex(0);
+      setIsTypingFinished(true);
+    }
+  };
+
+  useEffect(() => {
+    if (isNewMessage) {
+      const interval = setInterval(typeWriter, 5);
+      return () => clearInterval(interval);
+    }
+  }, [currentIndex, initialText, isNewMessage]);
+
+  if (!isTypingFinished) {
+    return <Text style={styles.messageText}>{currentLetter}</Text>;
+  }
+
+  return <Text style={styles.messageText}>{initialText}</Text>;
+};
+
+export const Messages = ({
+  messages,
+  isLoading,
+  loadingMessageIndex,
+}: {
+  messages: MessageType[] | null;
+  isLoading: boolean;
+  loadingMessageIndex: number;
+}) => {
+  const scrollViewRef = useRef<ScrollView | null>(null);
+
   const getUserImage = (userName: string) => {
     if (userName === 'user') {
       return require('../../../assets/icons/user.png');
@@ -24,8 +79,31 @@ export const Messages = ({ messages }: { messages: MessageType[] | null }) => {
     return 'CAN bot';
   };
 
+  const getMessage = (userName: string, message: string, index: number) => {
+    if (userName === 'user') {
+      return <Text style={styles.messageText}>{message}</Text>;
+    }
+
+    return <TypingText initialText={message} isNewMessage={index === loadingMessageIndex} />;
+  };
+
+  useEffect(() => {
+    scrollViewRef.current.scrollToEnd();
+  }, [messages]);
+
+  const renderLoadingMessage = () => (
+    <View style={styles.messageWrapper}>
+      <View style={styles.messageImageWrapper}>
+        <Image style={styles.messageImage} source={getUserImage('bot')} />
+      </View>
+      <View style={styles.messageContentWrapper}>
+        <Text style={styles.messageUser}>{getUserName('bot')}</Text>
+        <LoadingAnimation dotsCount={3} />
+      </View>
+    </View>
+  );
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} ref={scrollViewRef}>
       {messages &&
         messages.map((item, index) => (
           <View style={styles.messageWrapper} key={index}>
@@ -34,10 +112,11 @@ export const Messages = ({ messages }: { messages: MessageType[] | null }) => {
             </View>
             <View style={styles.messageContentWrapper}>
               <Text style={styles.messageUser}>{getUserName(item.user)}</Text>
-              <Text style={styles.messageText}>{item.message}</Text>
+              {getMessage(item.user, item.message, index)}
             </View>
           </View>
         ))}
+      {isLoading && renderLoadingMessage()}
     </ScrollView>
   );
 };
