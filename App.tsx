@@ -53,9 +53,11 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: colors.background,
+    alignItems: 'center',
   },
   container: {
     width: Platform.OS === 'web' ? 800 : 'auto',
+    justifyContent: Platform.OS === 'web' ? 'center' : 'flex-start',
     alignItems: Platform.OS === 'web' ? 'center' : 'stretch',
   },
   text: {
